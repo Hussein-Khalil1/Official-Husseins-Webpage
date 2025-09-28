@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hussein Khalil | Computer Science Student</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-midnight: #001b3a;
+      --color-ink: #002c5c;
+      --color-royal: #004b8d;
+      --color-sky: #5ab0ff;
+      --color-ice: #b5e3ff;
+      --color-gold: #f5b301;
+      --color-text: #f0f6ff;
+      --color-muted: rgba(240, 246, 255, 0.72);
+      --color-card: rgba(0, 38, 87, 0.58);
+      --shadow-lg: 0 26px 70px rgba(0, 33, 71, 0.45);
+      --shadow-sm: 0 10px 28px rgba(0, 33, 71, 0.35);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      /* Seamless base gradient + ultra-soft depth and noise overlay to remove banding */
+      background-image:
+        linear-gradient(180deg, #071a2d 0%, #0a2238 55%, #0b2033 100%),
+        radial-gradient(120% 160% at 20% 0%, rgba(120, 180, 255, 0.06), transparent 70%),
+        url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.025"/></svg>');
+      background-size: 100% 100%, 100% 100%, 300px 300px;
+      background-repeat: no-repeat, no-repeat, repeat;
+      background-blend-mode: normal, lighten, overlay;
+      color: var(--color-text);
+      min-height: 100vh;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+    }
+
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      inset: auto 5% -25% auto;
+      width: 560px;
+      height: 560px;
+      background: radial-gradient(circle, rgba(90, 176, 255, 0.14), transparent 70%);
+      filter: blur(120px);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body::after {
+      inset: -15% auto auto 5%;
+      width: 680px;
+      height: 680px;
+      background: radial-gradient(circle, rgba(245, 179, 1, 0.10), transparent 75%);
+      filter: blur(140px);
+      opacity: 0.45;
+    }
+
+    .page-shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px clamp(18px, 4vw, 48px) 80px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px clamp(18px, 4vw, 36px);
+      border-radius: var(--radius-lg);
+      background: rgba(0, 38, 87, 0.55);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 12px;
+      z-index: 100;
+      min-height: 64px;
+    }
+
+    .brand {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 2vw, 2rem);
+      letter-spacing: 0.04em;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(14px, 2.6vw, 32px);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .nav-links a {
+      color: var(--color-muted);
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-links a:hover, .nav-links a:focus {
+      color: var(--color-text);
+      background: rgba(90, 176, 255, 0.17);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      margin-top: clamp(4px, 2vw, 16px);
+      padding: clamp(28px, 4.5vw, 60px) clamp(20px, 4.5vw, 48px);
+      border-radius: var(--radius-xl);
+      /* Match page hues, reduce contrast */
+      background: linear-gradient(140deg, rgba(0, 44, 92, 0.82) 0%, rgba(0, 27, 58, 0.78) 40%, rgba(0, 41, 85, 0.72) 100%);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero::before {
+      /* creates a soft aurora glow behind the hero headline */
+      content: '';
+      position: absolute;
+      inset: -45% -25% auto 12%;
+      height: 520px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, rgba(90, 176, 255, 0.18), transparent 65%);
+      z-index: -1;
+      filter: blur(24px);
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: auto -30% -45% 25%;
+      width: 620px;
+      height: 620px;
+      background: radial-gradient(circle, rgba(245, 179, 1, 0.12), transparent 70%);
+      filter: blur(28px);
+      z-index: -1;
+    }
+
+    .eyebrow {
+      display: block;
+      font-size: 0.9rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(181, 227, 255, 0.9);
+      opacity: 1;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      margin-bottom: clamp(12px, 2vw, 18px);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 9vw, 5rem);
+      margin: 18px 0 12px;
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+    }
+
+    .lead {
+      max-width: 620px;
+      font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+      color: var(--color-muted);
+      margin-bottom: clamp(28px, 4vw, 42px);
+    }
+
+    /* Hero layout defaults to stacked; becomes side-by-side on wider screens */
+    .hero-grid {
+      display: grid;
+      gap: clamp(28px, 5vw, 48px);
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(22px, 4vw, 36px);
+    }
+
+    .hero-portrait {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+        align-items: center;
+      }
+
+      .hero-content {
+        max-width: clamp(520px, 58vw, 720px);
+        gap: clamp(24px, 4vw, 40px);
+      }
+
+      .hero-portrait {
+        display: block;
+        justify-self: end;
+        width: clamp(240px, 28vw, 340px);
+        max-width: 360px;
+        aspect-ratio: 3 / 4;
+        border-radius: 26px;
+        overflow: hidden;
+        border: 1px solid rgba(181, 227, 255, 0.22);
+        box-shadow: 0 32px 80px rgba(0, 33, 71, 0.5);
+        position: relative;
+      }
+
+      .hero-portrait::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 27, 58, 0) 0%, rgba(0, 27, 58, 0.28) 100%);
+        pointer-events: none;
+      }
+
+      .hero-portrait img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+      }
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 10px;
+      margin-bottom: clamp(28px, 4vw, 38px);
+      color: rgba(181, 227, 255, 0.8);
+      font-size: 0.95rem;
+    }
+
+    .hero-meta a {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      color: var(--color-text);
+      text-decoration: none;
+      background: rgba(90, 176, 255, 0.12);
+      border: 1px solid rgba(90, 176, 255, 0.18);
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .hero-meta a:hover {
+      background: rgba(90, 176, 255, 0.22);
+      transform: translateY(-2px);
+    }
+
+    .cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: clamp(38px, 6vw, 56px);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--color-sky), #2c7efc);
+      color: #04152c;
+      box-shadow: 0 16px 36px rgba(90, 176, 255, 0.38);
+    }
+
+    .btn.primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 40px rgba(90, 176, 255, 0.48);
+    }
+
+    .btn.secondary {
+      color: var(--color-text);
+      border: 1px solid rgba(181, 227, 255, 0.4);
+      background: rgba(0, 44, 92, 0.5);
+    }
+
+    .btn.secondary:hover {
+      transform: translateY(-3px);
+      border-color: rgba(181, 227, 255, 0.7);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 18px;
+    }
+
+    .stat-card {
+      background: rgba(0, 41, 85, 0.62);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      border: 1px solid rgba(181, 227, 255, 0.16);
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-bottom: 4px;
+    }
+
+    main {
+      margin-top: clamp(48px, 6vw, 80px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(32px, 5vw, 56px);
+    }
+
+    .section {
+      background: rgba(0, 28, 58, 0.82);
+      border-radius: var(--radius-xl);
+      padding: clamp(24px, 4vw, 48px);
+      border: 1px solid rgba(138, 200, 230, 0.18);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .section--highlight {
+      background: linear-gradient(135deg, rgba(0, 44, 92, 0.78) 0%, rgba(0, 24, 52, 0.74) 100%);
+    }
+
+    .section::after {
+      content: '';
+      position: absolute;
+      inset: auto 12% -18% auto;
+      width: 280px;
+      height: 280px;
+      background: radial-gradient(circle, rgba(90, 176, 255, 0.12), transparent 72%);
+      filter: blur(16px);
+      z-index: -1;
+    }
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: clamp(32px, 5vw, 48px);
+    }
+
+    .section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.1rem, 5vw, 2.8rem);
+      margin: 0;
+    }
+
+    .section p {
+      margin: 0;
+      color: var(--color-muted);
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 28px;
+      padding-left: 26px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 4px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(90, 176, 255, 0.8), rgba(0, 75, 141, 0.2));
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 22px 26px;
+      background: rgba(0, 44, 92, 0.58);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(181, 227, 255, 0.18);
+      box-shadow: 0 12px 24px rgba(0, 33, 71, 0.28);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 28px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid rgba(181, 227, 255, 0.85);
+      background: var(--color-midnight);
+      box-shadow: 0 0 0 6px rgba(90, 176, 255, 0.18);
+    }
+
+    .timeline-item h3 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+    }
+
+    .timeline-item .time {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(181, 227, 255, 0.76);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(90, 176, 255, 0.16);
+      color: var(--color-ice);
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: clamp(22px, 3vw, 32px);
+    }
+
+    .card {
+      padding: 26px;
+      border-radius: var(--radius-lg);
+      background: rgba(0, 38, 87, 0.68);
+      border: 1px solid rgba(181, 227, 255, 0.16);
+      box-shadow: 0 16px 36px rgba(0, 33, 71, 0.32);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 22px 44px rgba(0, 33, 71, 0.38);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+    }
+
+    .card p {
+      margin-bottom: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      background: rgba(90, 176, 255, 0.16);
+      color: var(--color-text);
+      border: 1px solid rgba(181, 227, 255, 0.24);
+      font-weight: 600;
+    }
+
+    #education .badge {
+      background: rgba(90, 176, 255, 0.16);
+      color: var(--color-text);
+      border: 1px solid rgba(181, 227, 255, 0.24);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+    }
+
+    .skill-block {
+      padding: 24px;
+      border-radius: var(--radius-md);
+      background: rgba(0, 35, 75, 0.7);
+      border: 1px solid rgba(138, 200, 230, 0.18);
+    }
+
+    .skill-block h3 {
+      margin-top: 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .skill-block ul {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .skill-block li {
+      color: var(--color-muted);
+    }
+
+    .contact-card {
+      display: grid;
+      gap: 18px;
+      max-width: none;
+      width: 100%;
+      padding: 32px;
+      border-radius: var(--radius-lg);
+      background: rgba(0, 29, 63, 0.85);
+      border: 1px solid rgba(90, 176, 255, 0.26);
+      box-shadow: var(--shadow-sm);
+      overflow: visible;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 14px;
+      overflow-x: auto;
+      justify-content: center;
+      padding: 0 clamp(12px, 4vw, 48px);
+    }
+
+    .contact-links a {
+      color: var(--color-text);
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: rgba(90, 176, 255, 0.16);
+      transition: background 0.2s ease, transform 0.2s ease;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+
+    .contact-links a:hover {
+      background: rgba(90, 176, 255, 0.24);
+      transform: translateY(-2px);
+    }
+
+    /* Back-to-top button styled for site palette */
+    .back-to-top {
+      position: fixed;
+      right: clamp(16px, 3vw, 32px);
+      bottom: clamp(24px, 4vw, 48px);
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(90, 176, 255, 0.16);
+      border: none;
+      color: var(--color-text);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 4px rgba(90, 176, 255, 0.14);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      isolation: isolate;
+      z-index: 120;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(12px);
+    }
+
+    .back-to-top__icon {
+      width: 14px;
+      transition: transform 0.3s ease;
+    }
+
+    .back-to-top__icon path {
+      fill: var(--color-text);
+    }
+
+    .back-to-top:focus-visible {
+      outline: 2px solid var(--color-sky);
+      outline-offset: 4px;
+    }
+
+    .back-to-top::before {
+      position: absolute;
+      content: 'Back to Top';
+      color: var(--color-text);
+      font-size: 0;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .back-to-top:hover {
+      width: 156px;
+      border-radius: 50px;
+      background: linear-gradient(135deg, rgba(90, 176, 255, 0.28), rgba(90, 176, 255, 0.45));
+      box-shadow: 0 18px 32px rgba(0, 33, 71, 0.45);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-to-top:hover .back-to-top__icon {
+      transform: translateY(-200%);
+    }
+
+    .back-to-top:hover::before {
+      font-size: 0.8rem;
+      opacity: 1;
+    }
+
+    .back-to-top.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    footer {
+      margin-top: clamp(56px, 8vw, 96px);
+      padding: 24px 0 40px;
+      text-align: center;
+      color: rgba(181, 227, 255, 0.6);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 900px) {
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .nav-links {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+
+      .timeline {
+        padding-left: 18px;
+      }
+
+      .timeline-item::before {
+        left: -16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-shell {
+        padding: 20px 16px 60px;
+      }
+
+      .hero, .section {
+        padding: 24px 20px;
+      }
+
+      .cta-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body::before, body::after {
+        display: none;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline {
+        padding-left: 14px;
+      }
+
+      .timeline-item {
+        padding: 20px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+      <nav class="nav">
+        <span class="brand">Hussein Khalil</span>
+        <div class="nav-links">
+          <a href="#experience">Experience</a>
+          <a href="#projects">Projects</a>
+          <a href="#skills">Skills</a>
+          <a href="#education">Education</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </nav>
+    <header class="hero" id="top">
+      <div class="hero-grid">
+        <div class="hero-content">
+          <p class="eyebrow">UNIVERSITY OF TORONTO · COMPUTER SCIENCE & MATHEMATICS</p>
+          <h1>Aspiring Software Engineer</h1>
+          <p class="lead">
+          Welcome to my Website, I'm Hussein Khalil a Fourth year Computer Science student driven by curiosity for AI, data intensive systems, and polished product experiences. I thrive on breaking down complex problems into approachable builds that serve people fairly and reliably.
+          </p>
+        </div>
+          <div class="hero-portrait">
+            <img src="img.png" alt="Portrait of Hussein Khalil" loading="lazy" />
+          </div>
+        </div>
+          <div class="hero-meta">
+          <a href="https://www.linkedin.com/in/hussein-khalil1" target="_blank" rel="noreferrer noopener">LinkedIn</a>
+          <a href="https://github.com/hussein-khalil1" target="_blank" rel="noreferrer noopener">GitHub</a>
+          <a href="mailto:husseinhkk@hotmail.com">husseinhkk@hotmail.com</a>
+          <a href="tel:+16475491284">647·549·1284</a>
+          </div>
+          <div class="cta-group">
+          <a class="btn primary" href="#projects">See Featured Work</a>
+          <a class="btn secondary" href="#contact">Let’s Collaborate</a>
+          </div>
+          <div class="stats">
+          <div class="stat-card">
+            <strong>Class of 2026</strong>
+            <span>HBSc Computer Science & Mathematics, University of Toronto</span>
+          </div>
+          <div class="stat-card">
+            <strong>Expertise</strong>
+            <span>Data Structures & Algorithms, OOP, Computer Organization, Machine Learning, Artificial Intelligence, Cybersecurity</span>
+          </div>
+          <div class="stat-card">
+            <strong>Algorithmic Bias</strong>
+            <span>Analyzed 10k+ COMPAS risk assessment records with Python to evaluate bias, fairness, and accuracy.</span>
+          </div>
+    </header>
+
+    <main>
+      <section class="section section--highlight" id="experience">
+        <div class="section-header">
+          <h2>Experience</h2>
+          <p>Research and applied work that blends responsible AI with rigorous engineering practice.</p>
+        </div>
+        <div class="timeline">
+          <article class="timeline-item">
+            <span class="time">Jun 2025 — Aug 2025</span>
+            <h3>Research Assistant · University of Toronto</h3>
+            <p>
+              Investigated algorithmic bias in the COMPAS risk assessment tool, analyzing 10k+ case records with Python to evaluate fairness and predictive accuracy. Built reproducible Jupyter experiments, fairness-aware pipelines, and visual reports that improved model accuracy to 77.2% while reducing disparity (SPD –0.012, DI 0.981).
+            </p>
+            <div class="chips">
+              <span class="chip">Python</span>
+              <span class="chip">TensorFlow</span>
+              <span class="chip">Fair ML</span>
+              <span class="chip">Data Visualization</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="projects">
+        <div class="section-header">
+          <h2>Projects</h2>
+          <p>Hands-on builds that translate theoretical concepts into tangible software.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card">
+            <span class="badge">Research Assistant</span>
+            <h3>Fairness-Aware COMPAS Pipelines</h3>
+            <p>
+              Engineered modular scikit-learn + TensorFlow pipelines to surface algorithmic bias mitigation strategies. Documented experiment design, automated statistical testing, and delivered stakeholder-ready dashboards that guided ethical decision making.
+            </p>
+            <div class="chips">
+              <span class="chip">TensorFlow</span>
+              <span class="chip">scikit-learn</span>
+              <span class="chip">Pandas</span>
+            </div>
+          </article>
+          <article class="card">
+            <span class="badge">File Size Compression</span>
+            <h3>Utilizing QuadTree Image Compression</h3>
+            <p>
+              Implemented recursive quadrant partitioning to compress large grayscale datasets by up to 60% while maintaining fidelity. Added batch tooling, benchmarking scripts, and visualization layers to evaluate reconstruction quality.
+            </p>
+            <div class="chips">
+              <span class="chip">Python</span>
+              <span class="chip">NumPy</span>
+              <span class="chip">Matplotlib</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--highlight" id="skills">
+        <div class="section-header">
+          <h2>Technical Skills</h2>
+          <p>Languages, frameworks, and platforms I use to turn concepts into production-ready solutions.</p>
+        </div>
+        <div class="skills-grid">
+          <div class="skill-block">
+            <h3>Languages & Frameworks</h3>
+            <ul>
+              <li>Python (TensorFlow, Pandas, NumPy, Matplotlib, scikit-learn)</li>
+              <li>Java · C · JavaScript (React, Node.js) · SQL · HTML/CSS</li>
+            </ul>
+          </div>
+          <div class="skill-block">
+            <h3>Tools & Platforms</h3>
+            <ul>
+              <li>Git/GitHub · VS Code · IntelliJ · Eclipse</li>
+              <li>Linux · Jupyter Notebook · Bash scripting</li>
+            </ul>
+          </div>
+          <div class="skill-block">
+            <h3>Focus Areas</h3>
+            <ul>
+              <li>Responsible AI · Algorithmic Fairness · Data Visualization</li>
+              <li>Software Engineering fundamentals · Computational Modeling</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="education">
+        <div class="section-header">
+          <h2>Education</h2>
+          <p>University of Toronto coursework that grounds my engineering practice in theory.</p>
+        </div>
+        <div class="card-grid">
+          <article class="card">
+            <span class="badge">HBSc CS & Mathematics</span>
+            <h3>University of Toronto</h3>
+            <p>Expected Graduation · Nov 2026</p>
+            <div class="chips">
+              <span class="chip">Data Structures &amp; Algorithms</span>
+              <span class="chip">Machine Learning</span>
+              <span class="chip">Operating Systems</span>
+              <span class="chip">Artificial Intelligence</span>
+            </div>
+          </article>
+          <article class="card">
+            <h3>Additional Highlights</h3>
+            <p>
+              Deepened analytical rigor through coursework in Statistics, Numerical Methods, Probability, Combinatorics, Software Engineering, Computational Modeling, and Cybersecurity.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section section--highlight" id="contact">
+        <div class="section-header">
+          <h2>Let’s Work Together</h2>
+          <p>Open to internships, research collaborations, and software projects aimed at solving real world problems.</p>
+        </div>
+        <div class="contact-card">
+          <p>
+            Activily Looking for a teammate who enjoy creating change, helping the communinty and are inspired to be part of something big, something meaningful
+          </p>
+          <div class="contact-links">
+            <a href="mailto:husseinhkk@hotmail.com">husseinhkk@hotmail.com</a>
+            <a href="https://www.linkedin.com/in/hussein-khalil1" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://github.com/hussein-khalil1" target="_blank" rel="noreferrer">GitHub</a>
+            <a href="tel:+16475491284">647·549·1284</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © <span id="year"></span> Hussein Khalil · Crafted in Toronto with curiosity and care.
+    </footer>
+  </div>
+  <button class="back-to-top" type="button" aria-label="Back to top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' });">
+    <svg class="back-to-top__icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 5.5a1 1 0 0 1 .7.3l6 6a1 1 0 0 1-1.4 1.4L13 8.9V18a1 1 0 0 1-2 0V8.9l-4.3 4.3a1 1 0 1 1-1.4-1.4l6-6a1 1 0 0 1 .7-.3z" />
+    </svg>
+  </button>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    const backToTop = document.querySelector('.back-to-top');
+    const experienceSection = document.querySelector('#experience');
+    if (backToTop && experienceSection) {
+      const observer = new IntersectionObserver((entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting) {
+          backToTop.classList.add('is-visible');
+        } else {
+          backToTop.classList.remove('is-visible');
+        }
+      }, {
+        threshold: 0.1,
+      });
+
+      observer.observe(experienceSection);
+    }
+  </script>
+</body>
+</html>
